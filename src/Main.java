@@ -25,12 +25,12 @@ public class Main {
         s.useDelimiter("(><)");
         while (s.hasNext()) {
             String str = s.next();
-            if (str.contains("video muted=")) {
+            if (str.contains("video muted=")) { //detect if extra video information is coming and don't display them
                 mNumVidText = 6;
-            } else if (str.contains("style=\"background-image:") && mNumLinkText == 0) {
+            } else if (str.contains("style=\"background-image:") && mNumLinkText == 0) { //If an attachment is shared
                 System.out.println("Image posted");
                 people.get(currentName).mNumImages++;
-            } else if (str.contains("class=\"_4kf7 preview\"") && str.contains("div data-tooltip-content")) {
+            } else if (str.contains("class=\"_4kf7 preview\"") && str.contains("div data-tooltip-content")) { //Reaction counters
                 String[] reactList = removeReactTags(str).split("\n");
                 for (String name : reactList) {
                     String firstName = name.split(" ")[0];
@@ -39,13 +39,13 @@ public class Main {
                     people.get(firstName).mNumReacts++;
                 }
                 mIsReactionNumber = true;
-            } else if (str.contains("time class=\"_3oh-\"")) {
+            } else if (str.contains("time class=\"_3oh-\"")) { //When facebook marks a new time in conversation
                 System.out.println("New Time: " + removeTagChars(str));
-            } else if (str.contains("h5 class=\"_ih3\"") || str.contains("h5 class=\"_ih3 accessible_elem\"")) {
+            } else if (str.contains("h5 class=\"_ih3\"") || str.contains("h5 class=\"_ih3 accessible_elem\"")) { //Name is displayed
                 currentName = removeTagChars(str);
                 System.out.println("Name: " + currentName);
                 if (!people.containsKey(currentName)) people.put(currentName, new Stat());
-            } else if (str.matches("[^>|^<]+>[^>|^<]+<[^>|^<]+")) {
+            } else if (str.matches("[^>|^<]+>[^>|^<]+<[^>|^<]+")) { //Any kind of raw string from html, parsed as message/link
                 String message = removeTagChars(str);
                 mNumLinkText = mNumLinkText > 0 ? mNumLinkText - 1 : 0;
                 mNumVidText = mNumVidText > 0 ? mNumVidText - 1 : 0;
